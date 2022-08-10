@@ -121,6 +121,10 @@ const clickNoteOptionCopyLinkedNoteMarkdown = () => {
   clickTestID(TestID.COPY_REFERENCE_TO_NOTE)
 }
 
+const clickNoteOptionUnboldNote = () => {
+  clickTestID(TestID.DONT_PANIC)
+}
+
 const clickSyncNotes = () => {
   clickTestID(TestID.TOPBAR_ACTION_SYNC_NOTES)
 }
@@ -164,6 +168,7 @@ export {
   clickNoteOptionTrash,
   clickNoteOptions,
   clickNoteOptionCopyLinkedNoteMarkdown,
+  clickNoteOptionUnboldNote,
   clickSyncNotes,
   typeNoteEditor,
   typeNoteSearch,

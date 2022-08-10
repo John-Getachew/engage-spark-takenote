@@ -1,6 +1,11 @@
 import dayjs from 'dayjs'
 
-import { getNoteTitle, getWebsiteTitle, getActiveNoteFromShortUuid } from '@/utils/helpers'
+import {
+  getNoteTitle,
+  getWebsiteTitle,
+  getActiveNoteFromShortUuid,
+  unboldNote,
+} from '@/utils/helpers'
 import { Folder } from '@/utils/enums'
 import { NoteItem, CategoryItem } from '@/types'
 
@@ -105,6 +110,18 @@ describe('Utilities', () => {
       const notes = [oneNote, otherNote]
 
       expect(getActiveNoteFromShortUuid(notes, shortActiveNoteId)).toEqual(undefined)
+    })
+  })
+  describe('removeBoldStringsFromNote', () => {
+    test(`should remove astrix from both sides of a word`, () => {
+      const boldNote = `This is your **world**. This is gonna be a **happy** little seascape.`
+      const unboldedNote = `This is your world. This is gonna be a happy little seascape.`
+      expect(unboldNote(boldNote)).toEqual(unboldedNote)
+    })
+    test(`should not remove two astrixes that aren't followed by a word and ending two astrixes`, () => {
+      const boldNote = `This is your **world. This is gonna be a happy little seascape.`
+      const unboldedNote = `This is your **world. This is gonna be a happy little seascape.`
+      expect(unboldNote(boldNote)).toEqual(unboldedNote)
     })
   })
 })
