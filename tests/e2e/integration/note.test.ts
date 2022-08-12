@@ -14,6 +14,8 @@ import {
   testIDShouldContain,
   testIDShouldNotExist,
   clickDynamicTestID,
+  getTestID,
+  getDynamicTestID,
 } from '../utils/testHelperUtils'
 import {
   assertNewNoteCreated,
@@ -41,6 +43,7 @@ import {
   holdKeyAndClickNoteAtIndex,
   trashAllNotes,
   dragAndDrop,
+  clickNoteOptionUnboldNote,
 } from '../utils/testNotesHelperUtils'
 import {
   addCategory,
@@ -538,6 +541,25 @@ describe('Manage notes test', () => {
     cy.get('[data-testid=trash]').click()
     cy.get('[data-testid=note-list]').within(() => {
       cy.get('.note-list-each').should('have.length', 1)
+    })
+  })
+
+  it('should unbold a note', () => {
+    const boldedNote = 'Sample **note** text.'
+    const unboldedNote = 'Sample note text.'
+
+    navigateToNotes()
+    clickNoteOptions()
+    testIDShouldContain(TestID.DONT_PANIC, LabelText.DONT_PANIC)
+
+    clickCreateNewNote()
+    typeNoteEditor(boldedNote)
+
+    openNoteContextMenu()
+    clickNoteOptionUnboldNote()
+
+    cy.get('.CodeMirror-code').each((element) => {
+      expect(element.text()).to.equal(unboldedNote)
     })
   })
 
