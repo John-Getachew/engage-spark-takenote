@@ -1,11 +1,17 @@
 import React, { useContext } from 'react'
-import { ArrowUp, Download, Star, Trash, X, Edit2, Clipboard } from 'react-feather'
+import { ArrowUp, Download, Star, Trash, X, Edit2, Clipboard, XCircle } from 'react-feather'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { LabelText } from '@resources/LabelText'
 import { TestID } from '@resources/TestID'
 import { ContextMenuOption } from '@/components/NoteList/ContextMenuOption'
-import { downloadNotes, isDraftNote, getShortUuid, copyToClipboard } from '@/utils/helpers'
+import {
+  downloadNotes,
+  isDraftNote,
+  getShortUuid,
+  copyToClipboard,
+  unboldNote,
+} from '@/utils/helpers'
 import {
   deleteNotes,
   toggleFavoriteNotes,
@@ -14,6 +20,7 @@ import {
   updateActiveNote,
   swapFolder,
   removeCategoryFromNotes,
+  updateNote,
 } from '@/slices/note'
 import { getCategories, getNotes } from '@/selectors'
 import { Folder, ContextMenuEnum } from '@/utils/enums'
@@ -121,7 +128,7 @@ const NotesOptions: React.FC<NotesOptionsProps> = ({ clickedNote }) => {
     dispatch(addCategoryToNote({ categoryId, noteId }))
   const _updateActiveNote = (noteId: string, multiSelect: boolean) =>
     dispatch(updateActiveNote({ noteId, multiSelect }))
-
+  const _updateNote = (note: NoteItem) => dispatch(updateNote(note))
   // ===========================================================================
   // Handlers
   // ===========================================================================
@@ -143,6 +150,11 @@ const NotesOptions: React.FC<NotesOptionsProps> = ({ clickedNote }) => {
 
     const shortNoteUuid = getShortUuid(note.id)
     copyToClipboard(`{{${shortNoteUuid}}}`)
+  }
+  const unboldNoteHandler = () => {
+    const { text: clickedNoteText } = clickedNote
+    const unboldedText = unboldNote(clickedNoteText)
+    _updateNote({ ...clickedNote, text: unboldedText })
   }
 
   return !isDraftNote(clickedNote) ? (
@@ -206,6 +218,12 @@ const NotesOptions: React.FC<NotesOptionsProps> = ({ clickedNote }) => {
         handler={(e: React.SyntheticEvent) => copyLinkedNoteMarkdownHandler(e, clickedNote)}
         icon={Clipboard}
         text={LabelText.COPY_REFERENCE_TO_NOTE}
+      />
+      <ContextMenuOption
+        dataTestID={TestID.DONT_PANIC}
+        handler={unboldNoteHandler}
+        icon={XCircle}
+        text={LabelText.DONT_PANIC}
       />
     </nav>
   ) : null

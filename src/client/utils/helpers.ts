@@ -294,3 +294,10 @@ export const getNoteBarConf = (
 export const copyToClipboard = (text: string) => {
   clipboard.writeText(text)
 }
+
+export const unboldNote = (note: string) => {
+  var unboldedText = note.replace(/\*\*([^*]*(?:\*(?!\*)[^*]*)*)\*\*/g, function (match, index) {
+    return '' + index + ''
+  })
+  return unboldedText
+}
